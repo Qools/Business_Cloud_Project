@@ -1,0 +1,171 @@
+﻿@model IEnumerable<classlar.Models.Customer>
+
+@{
+    ViewBag.Title = "Customers";
+}
+
+<h2>Index</h2>
+<script src="~/Scripts/Chart.bundle.js"></script>
+<script src="~/Scripts/Chart.js"></script>
+<p>
+    @Html.ActionLink("Create New", "CreateCustomer")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerName)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Country)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CustomerPhone)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CargoNameCode)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.Loan)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalAmountOfMoney)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.TotalAmountOfNumber)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Country)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CustomerPhone)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CargoNameCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Loan)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmountOfMoney)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.TotalAmountOfNumber)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.CustomerCode }) |
+                @Html.ActionLink("Details", "Details", new { id = item.CustomerCode }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.CustomerCode })
+            </td>
+        </tr>
+    }
+
+</table>
+
+<canvas id="ChartLoan"></canvas>
+<canvas id="ChartTotalN"></canvas>
+<canvas id="ChartTotalM"></canvas>
+
+<script src="https://code.jquery.com/jquery.min.js"></script>
+
+<script>
+    $.get("/Customer/Chart", function (response) {
+        console.log(response);
+        var laellerLoan = [];
+        var laellerTotalM = [];
+        var laellerTotalN = [];
+        for (var i = 0; i < response.loans.length; i++) {
+            laellerLoan.push("Loan " + (i + 1));
+        }
+        for (var i = 0; i < response.totalMoney.length; i++) {
+            laellerTotalM.push("Total Money " + (i + 1));
+        }
+        for (var i = 0; i < response.totalNumber.length; i++) {
+            laellerTotalN.push("Total Number " + (i + 1));
+        }
+        var data1 = {
+            labels: laellerLoan,
+            datasets: [
+                {
+                    label: "Loan",
+                    backgroundColor: "blue",
+                    data: response.loans
+                }
+            ]
+        };
+        var myBarChart = new Chart(document.getElementById("ChartLoan"), {
+            type: 'bar',
+            data: data1,
+            options: {
+                barValueSpacing: 5,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        });
+        var data2 = {
+            labels: laellerTotalM,
+            datasets: [
+                {
+                    label: "Total Money",
+                    backgroundColor: "red",
+                    data: response.totalMoney
+                }
+            ]
+        };
+        var myBarChart = new Chart(document.getElementById("ChartTotalM"), {
+            type: 'bar',
+            data: data2,
+            options: {
+                barValueSpacing: 5,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        });
+        var data3 = {
+            labels: laellerTotalM,
+            datasets: [
+                {
+                    label: "Total Number",
+                    backgroundColor: "red",
+                    data: response.totalNumber
+                }
+            ]
+        };
+        var myBarChart = new Chart(document.getElementById("ChartTotalN"), {
+            type: 'bar',
+            data: data3,
+            options: {
+                barValueSpacing: 5,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        });
+
+
+
+      
+    });
+</script>

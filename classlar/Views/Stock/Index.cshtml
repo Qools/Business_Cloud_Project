@@ -1,0 +1,88 @@
+﻿@model IEnumerable<classlar.Models.Stock>
+
+@{
+    ViewBag.Title = "Stock";
+}
+
+<h2>Index</h2>
+
+<p>
+    @Html.ActionLink("Create New", "CreateStock")
+</p>
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.ProductID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LotID)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.CountOfProduct)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.ProductID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LotID)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CountOfProduct)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.StockID }) |
+                @Html.ActionLink("Details", "Details", new { id = item.StockID }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.StockID })
+            </td>
+        </tr>
+    }
+
+</table>
+<canvas id="Chart"></canvas>
+
+<script src="~/Scripts/Chart.bundle.js"></script>
+<script src="~/Scripts/Chart.js"></script>
+
+<script src="https://code.jquery.com/jquery.min.js"></script>
+
+<script>
+    $.get("/Stock/GetChartData", function (response) {
+        var laeller = [];
+        for (var i = 0; i < response.length; i++) {
+            laeller.push("Product "+(i+1));
+        }
+        console.log(response.length);
+        var data = {
+            labels: laeller,
+                datasets: [
+                    {
+
+                        label: "Count Of Product",
+                        backgroundColor: "blue",
+                        data: response
+                    }
+                ]
+            };
+        console.log(data);
+        var myBarChart = new Chart(document.getElementById("Chart"), {
+            type: 'bar',
+            data: data,
+            options: {
+                barValueSpacing: 20,
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            min: 0,
+                        }
+                    }]
+                }
+            }
+        });
+    });
+</script>

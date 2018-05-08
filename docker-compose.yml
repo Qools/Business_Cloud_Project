@@ -1,0 +1,8 @@
+version: '3'
+
+services:
+  classlar:
+    image: classlar
+    build:
+      context: .\classlar
+      dockerfile: Dockerfile
